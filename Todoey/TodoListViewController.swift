@@ -38,5 +38,25 @@ class TodoListViewController: UITableViewController{
         return cell
     }
 
+    //Mark: - Tableview Delegate Methods : Get fired everytime user click cell in Table View
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(itemArray[indexPath.row])
+        
+        //Deselct cell after click (Make the dark background disappear)
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        //Add checkmark to cell everytime it clicked
+        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        }
+        else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+            
+        }
+    }
+    
+    
+    
 }
 

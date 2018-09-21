@@ -10,8 +10,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController{
 
-    
-    var itemArray = ["Find Mike","Buy Eggos","Destroy Demogorgon"]
+    var itemArray = [Item]()
     
     //Set user default
     var defaults = UserDefaults.standard
@@ -21,7 +20,14 @@ class TodoListViewController: UITableViewController{
         
         // Do any additional setup after loading the view, typically from a nib.
         
-        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+        itemArray.append(Item(title: "Find Mike"))
+        itemArray.append(Item(title: "Buy Eggos"))
+        itemArray.append(Item(title: "Destroy Demogorgon"))
+        for i in 1 ... 20 {
+            itemArray.append(Item(title: "Destroy Demogorgon\(i)"))
+        }
+        
+        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
             itemArray = items
         }
     }
@@ -40,7 +46,11 @@ class TodoListViewController: UITableViewController{
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row]
+        let item = itemArray[indexPath.row]
+        
+        cell.textLabel?.text = item.title
+        
+        cell.accessoryType = item.done ? .checkmark : .none
         
         return cell
     }
@@ -49,6 +59,9 @@ class TodoListViewController: UITableViewController{
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
+        
+        // revert done status
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         //Deselct cell after click (Make the dark background disappear)
         tableView.deselectRow(at: indexPath, animated: true)
@@ -75,7 +88,7 @@ class TodoListViewController: UITableViewController{
             //what will happend when user click Add Item
 
             //Add new Item
-            self.itemArray.append(textField.text!)
+            self.itemArray.append(Item(title: textField.text!))
             
             self.defaults.set(self.itemArray, forKey: "TodoListArray")
             

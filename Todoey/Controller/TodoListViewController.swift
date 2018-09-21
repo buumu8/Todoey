@@ -19,9 +19,10 @@ class TodoListViewController: UITableViewController{
         
         // Do any additional setup after loading the view, typically from a nib.
         
-        itemArray.append(Item(title: "Find Mike"))
-        itemArray.append(Item(title: "Buy Eggos"))
-        itemArray.append(Item(title: "Destroy Demogorgon"))
+        loadItems()
+//        itemArray.append(Item(title: "Find Mike"))
+//        itemArray.append(Item(title: "Buy Eggos"))
+//        itemArray.append(Item(title: "Destroy Demogorgon"))
 //        for i in 1 ... 20 {
 //            itemArray.append(Item(title: "Destroy Demogorgon\(i)"))
 //        }
@@ -116,6 +117,18 @@ class TodoListViewController: UITableViewController{
             try data.write(to: dataFilePath!)
         } catch {
             print("error encoding item array, \(error)")
+        }
+    }
+    
+    func loadItems() {
+       if let data = try? Data(contentsOf: dataFilePath!){
+            let decoder = PropertyListDecoder()
+            do{
+                itemArray = try decoder.decode([Item].self, from: data)
+            }
+            catch {
+                print("Error decoding item:\(error)")
+            }
         }
     }
 }

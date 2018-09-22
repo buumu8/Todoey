@@ -107,6 +107,7 @@ class TodoListViewController: UITableViewController{
             //Reload Data to Table View
             self.tableView.reloadData()
         }
+        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new item"
@@ -114,6 +115,7 @@ class TodoListViewController: UITableViewController{
         }
         
         alert.addAction(action)
+        alert.addAction(cancel)
         
         present(alert, animated: true, completion: nil)
     }

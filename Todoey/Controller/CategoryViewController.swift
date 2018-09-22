@@ -65,6 +65,7 @@ class CategoryViewController: UITableViewController {
         
         let alert = UIAlertController(title: "Add new Todoey Category", message: "", preferredStyle: .alert)
         
+        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         let action = UIAlertAction(title: "Add Category", style: .default) { (action) in
             //what will happend when user click Add Category
             
@@ -84,7 +85,7 @@ class CategoryViewController: UITableViewController {
         }
         
         alert.addAction(action)
-        
+        alert.addAction(cancel)
         present(alert, animated: true, completion: nil)
     }
     

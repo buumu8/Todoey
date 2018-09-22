@@ -8,6 +8,7 @@
 
 import UIKit
 import SwipeCellKit
+import ChameleonFramework
 
 class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegate {
 
@@ -42,7 +43,19 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         // customize the action appearance
         deleteAction.image = UIImage(named: "delete-icon")
         
-        return [deleteAction]
+        let editAction = SwipeAction(style: .default, title: "Edit") { action, indexPath in
+            // handle action by updating model with deletion
+            
+            self.editModel(at: indexPath)
+            
+        }
+        
+        // customize the action appearance
+        deleteAction.image = UIImage(named: "delete-icon")
+        editAction.image = UIImage(named: "edit-icon")
+        editAction.backgroundColor = UIColor.flatYellow
+        
+        return [deleteAction,editAction]
     }
     
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
@@ -54,6 +67,10 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     
     func updateModel(at indexPath: IndexPath){
         print("update model")
+    }
+    
+    func editModel(at indexPath: IndexPath){
+        print("edit model")
     }
 
 }

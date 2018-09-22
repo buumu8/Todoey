@@ -67,7 +67,8 @@ class CategoryViewController: SwipeTableViewController {
         
         tableView.reloadData()
     }
-    // MaRK: - Delete Data From Swipe
+    
+    // MARK: - Delete Data From Swipe
     
     override func updateModel(at indexPath: IndexPath) {
         if let categoryForDeletion = self.categories?[indexPath.row]{
@@ -80,6 +81,55 @@ class CategoryViewController: SwipeTableViewController {
             }
         }
     }
+    
+    //MARK: - Edit Data From Swipe
+    override func editModel(at indexPath: IndexPath) {
+        
+        if let categoryForEdit = self.categories?[indexPath.row]{
+            do{
+                //Make Edit Name
+                var textField = UITextField()
+                
+                let alert = UIAlertController(title: "Change Todoey Category Name", message: "", preferredStyle: .alert)
+                
+                let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+                let action = UIAlertAction(title: "Edit", style: .default) { (action) in
+                    //what will happend when user click Edit Category
+                    
+                    do {
+                        try self.realm.write {
+                            categoryForEdit.name = textField.text!
+                        }
+                    }
+                    catch {
+                        print("Error saving editted category, \(error)")
+                    }
+                    
+                    self.tableView.reloadData()
+                }
+                
+                alert.addTextField { (alertTextField) in
+                    alertTextField.placeholder = categoryForEdit.name
+                    textField = alertTextField
+                }
+                
+                cancel.setValue(UIColor.red, forKey: "titleTextColor")
+                
+                
+                //Make change category
+                
+                alert.addAction(action)
+                alert.addAction(cancel)
+                present(alert, animated: true, completion: nil)
+                
+                
+            } catch{
+                print("Error editing category, \(error)")
+            }
+        }
+    }
+    
     // MARK: - Add New Categories
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -127,5 +177,6 @@ class CategoryViewController: SwipeTableViewController {
             destinationVC.selectedCategory = categories?[indexPath.row]
         }
     }
+    
     
 }

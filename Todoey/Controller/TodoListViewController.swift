@@ -130,6 +130,49 @@ class TodoListViewController: SwipeTableViewController{
         }
     }
     
+    //MARK: - Edit Data From Swipe
+    override func editModel(at indexPath: IndexPath) {
+        
+        if let itemForEdit = self.todoItems?[indexPath.row]{
+            do{
+                var textField = UITextField()
+                
+                let alert = UIAlertController(title: "Change Todoey Item Name", message: "", preferredStyle: .alert)
+                
+                let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                
+                let action = UIAlertAction(title: "Edit", style: .default) { (action) in
+                    //what will happend when user click Edit Item
+                    
+                    do {
+                        try self.realm.write {
+                            itemForEdit.title = textField.text!
+                        }
+                    }
+                    catch {
+                        print("Error saving editted item, \(error)")
+                    }
+                    
+                    self.tableView.reloadData()
+                }
+                
+                alert.addTextField { (alertTextField) in
+                    alertTextField.placeholder = itemForEdit.title
+                    textField = alertTextField
+                }
+                
+                cancel.setValue(UIColor.red, forKey: "titleTextColor")
+                
+                alert.addAction(action)
+                alert.addAction(cancel)
+                present(alert, animated: true, completion: nil)
+                
+            } catch{
+                print("Error editing category, \(error)")
+            }
+        }
+    }
+    
 //MARK: - Add New Items
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {

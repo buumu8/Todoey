@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoryViewController: SwipeTableViewController {
     
@@ -19,6 +20,7 @@ class CategoryViewController: SwipeTableViewController {
         super.viewDidLoad()
         loadCategory()
         tableView.rowHeight = 80.0
+        tableView.separatorStyle = .none
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,8 +38,14 @@ class CategoryViewController: SwipeTableViewController {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Category Added"
+        guard let category = categories?[indexPath.row] else {fatalError()}
         
+        cell.textLabel?.text = category.name
+        
+        guard let categoryColor = UIColor(hexString: category.color) else {fatalError()}
+        cell.backgroundColor = categoryColor
+        
+        cell.textLabel?.textColor = ContrastColorOf(categoryColor, returnFlat: true)
         return cell
     }
     
@@ -80,13 +88,14 @@ class CategoryViewController: SwipeTableViewController {
         
         let alert = UIAlertController(title: "Add new Todoey Category", message: "", preferredStyle: .alert)
         
-        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
-        let action = UIAlertAction(title: "Add Category", style: .default) { (action) in
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let action = UIAlertAction(title: "Add", style: .default) { (action) in
             //what will happend when user click Add Category
             
             //Add new Category
             let newCategory = Category()
             newCategory.name = textField.text!
+            newCategory.color = UIColor.randomFlat.hexValue()
             
             self.saveCategory(category: newCategory)
             
@@ -98,6 +107,8 @@ class CategoryViewController: SwipeTableViewController {
             alertTextField.placeholder = "Create new Category"
             textField = alertTextField
         }
+        
+        cancel.setValue(UIColor.red, forKey: "titleTextColor")
         
         alert.addAction(action)
         alert.addAction(cancel)
@@ -114,8 +125,6 @@ class CategoryViewController: SwipeTableViewController {
         
         if let indexPath = tableView.indexPathForSelectedRow{
             destinationVC.selectedCategory = categories?[indexPath.row]
-            destinationVC.categoryTitle.title = categories?[indexPath.row].name
-            
         }
     }
     
